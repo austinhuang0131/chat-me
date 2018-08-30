@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>chat me</title>
+</head>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/main.css">
+
+<body>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+        <a class="navbar-brand" href="#">Title</a>
+        <ul class="nav navbar-nav ">
+            <li class="active">
+                <a href="#">Home</a>
+            </li>
+            <li>
+                <a href="#">Link</a>
+            </li>
+        </ul>
+    </nav>
+
+    <section class="container" style="display:none" id="sections">
+        <aside class="col-md-3 border-style border-range">
+            <ul class="list-unstyled sizeFont user-item" id="userList">
+
+            </ul>
+        </aside>
+        <div class="col-md-8 border-style">
+            <div id="showMessage" class="border-style-first border-range">
+            </div>
+            <form id="message-form">
+                <textarea id="textValue" style="resize:none" class="col-md-12 border-range textHeight"></textarea>
+                <button type="submit" class="btn btn-success pull-right col-md-4 border-range" name="action">发送</button>
+            </form>
+        </div>
+    </section>
+    <footer>bottom</footer>
+    <!-- windows -->
+    <div class="form-group border-range positions" id="users">
+        <form id="userName">
+            <div class="col-md-12">
+                <input type="text" placeholder="请输入名字..." class="form-control clearborder" id="name">
+            </div>
+            <div class="paddingLeftandRight">
+                <button type="submit" class="btn btn-success pull-right col-md-4 border-range">发送</button>
+            </div>
+        </form>
+    </div>
+    <script src="js/jquery.3.3.1.js"></script>
+    <script src="js/socket.io.2.1.0.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        let socket = io({ 'timeout': 5000, 'connect timeout': 5000 });
+        let message = document.getElementById('message-form');
+        let showMessage = document.getElementById('showMessage');
+        let userName = document.getElementById('userName');
+        let users = document.getElementById('users');
+        let sections = document.getElementById('sections');
+        let userList = document.getElementById('userList');
+
+        (function () {
+            socket.on('userLoad', listUserName => {
+                console.log(listUserName);
+                userList.innerHTML = '';
+                listUserName.forEach(user => {
+                    let userli = document.createElement('li');
+                    userli.setAttribute('class', 'user-item');
+                    userli.innerHTML = `<h5>${user}</h5>`;
+                    userList.appendChild(userli, userList.lastChild);
+                });
+            });
+           {{!-- insert uesrname --}}
+            userName.addEventListener('submit', e => {
+                e.preventDefault();
+                let name = document.getElementById('name').value;
+                if (name == '') {
+                    alert('please entry information...');
+                    return;
+                }
+                document.getElementById('name').value = "";
+                socket.emit('loginName', name, () => {
+
+                    users.style = "display:none";
+                    sections.style = "display:block";
+                    // message information
+                    let mess = document.createElement('h4');
+                    mess.setAttribute('class', 'colorFont');
+                    mess.textContent = `Welcome ${name} join Chat`;
+                    showMessage.appendChild(mess);
+                    showMessage.insertBefore(mess, showMessage.lastElementChild);
+                });
+            });
+            {{!-- send information --}}
+            message.addEventListener('submit', e => {
+                e.preventDefault();
+                let textValue = document.getElementById('textValue').value;
+                document.getElementById('textValue').value = "";
+                if (textValue == '') {
+                    alert('please entry information...');
+                    return;
+                }
+                socket.emit('messageText', textValue);
+            });
+            socket.on('output', data => {
+                let element = document.createElement('h5');
+                element.textContent = data.name + ":" + data.msg;
+                showMessage.appendChild(element);
+                showMessage.insertBefore(element, showMessage.lastChild);
+            });
+        })();
+    </script>
+</body>
+
+</html>

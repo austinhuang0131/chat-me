@@ -1,0 +1,63 @@
+.navbar{
+    margin-bottom: 0;
+}
+
+
+ .border-style{
+    height: 34em;
+}
+
+
+.border-style-first{
+    height: 26em;
+    overflow: auto;
+}
+
+
+
+ .border-none{
+    border: none;
+}
+
+
+.border-range{
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+.positions{
+    position: relative;
+    margin: auto;
+    width: 30em;
+    height: 6em;
+}
+.paddingLeftandRight{
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.clearborder{
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+
+.textHeight{
+    height: 5em;
+}
+
+
+
+
+.colorFont{
+    color: #666; 
+}
+
+.bor1{
+    border: 1px solid #999;
+}
+
